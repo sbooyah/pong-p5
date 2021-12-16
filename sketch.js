@@ -29,18 +29,28 @@ function draw() {
 
     // UPDATE PADDLES WITH KEY INPUT
     if (keyIsDown(87)) {
-      player1.y = player1.y - player1.dy * deltaTime;
+      player1.dy = -player1.paddleSpeed;
+      player1.update();
     } else if (keyIsDown(83)) {
-      player1.y = player1.y + player1.dy * deltaTime;
+      player1.dy = player1.paddleSpeed;
+      player1.update();
+    } else {
+      player1.dy = 0;
     }
     if (keyIsDown(UP_ARROW)) {
-      player2.y = player2.y - player2.dy * deltaTime;
+      player2.dy = -player2.paddleSpeed;
+      player2.update();
     } else if (keyIsDown(DOWN_ARROW)) {
-      player2.y = player2.y + player2.dy * deltaTime;
+      player2.dy = player2.paddleSpeed;
+      player2.update();
+    } else {
+      player2.dy = 0;
     }
 
     basa.draw();
     player1.draw();
     player2.draw();
+    // text to show FPS
+    text(`FPS: ${Math.round(frameRate())}`, 10, 10);
   }
 }
