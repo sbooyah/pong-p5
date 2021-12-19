@@ -8,8 +8,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   colorMode(HSL, 359, 100, 100, 100);
   basa = new Ball(windowWidth / 2, windowHeight / 2, 25, 25);
-  player1 = new Paddle(10, windowHeight / 2, 15, 80);
-  player2 = new Paddle(windowWidth - 25, windowHeight / 2, 15, 80);
+  player1 = new Paddle(10, windowHeight / 2, 15, 150);
+  player2 = new Paddle(windowWidth - 25, windowHeight / 2, 15, 150);
 }
 
 function draw() {
@@ -20,7 +20,30 @@ function draw() {
     fill('white');
     text(player1Score, windowWidth / 2 - 50, windowHeight / 5)
     text(player2Score, windowWidth / 2 + 30, windowHeight / 5)
-    basa.update();
+    
+
+    // CHECK BALL PADDLE COLLISION
+    if (basa.collides(player1)) {
+      basa.dx = -basa.dx * 1.03;
+      basa.x = player1.x + player1.width + basa.width / 2 + 1;
+
+      if (basa.dy < 0) {
+        basa.dy = -Math.random();
+      } else {
+        basa.dy = Math.random();
+      }
+    }
+
+    if (basa.collides(player2)) {
+      basa.dx = -basa.dx * 1.03;
+      basa.x = player2.x - basa.width / 2;
+
+      if (basa.dy < 0) {
+        basa.dy = -Math.random();
+      } else {
+        basa.dy = Math.random();
+      }
+    }
 
     // CHECK IF BALL IS PAST PADDLES
     if (basa.x - basa.width > windowWidth ||
@@ -29,9 +52,13 @@ function draw() {
     }
 
     // CHECK IF BALL HITS TOP OR BOTTOM WALL
-    if (basa.y + basa.height / 2 > windowHeight ||
-        basa.y - basa.height / 2 < 0) {
-      basa.dy = basa.dy * -1;
+    if (basa.y + basa.height / 2 > windowHeight) {
+      basa.y = windowHeight - basa.height / 2;
+      basa.dy = -basa.dy
+    }
+    if (basa.y - basa.height / 2 < 0) {
+      basa.y = 0 + basa.height / 2;
+      basa.dy = -basa.dy
     }
 
     // UPDATE PADDLES WITH KEY INPUT
@@ -54,11 +81,14 @@ function draw() {
       player2.dy = 0;
     }
 
+    basa.update();
     basa.draw();
     player1.draw();
     player2.draw();
     // text to show FPS
     textSize(40)
     text(`FPS: ${Math.round(frameRate())}`, 30, 50);
+    text(`Ball.dx = ${basa.dx}`, 30, 90);
+    text(`Ball.dy = ${basa.dy}`, 30, 130);
   }
 }
