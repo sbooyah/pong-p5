@@ -12,7 +12,7 @@ class Ball {
         if (Math.sign(this.dx) === 1) {
           this.dx = Math.max(0.2, Math.random() - 0.5)
         } else {
-          this.dx = Math.min(-0.2, -Math.random() - 0.5)
+          this.dx = Math.min(-0.2, -Math.random() + 0.5)
         }
     }
     this.x = this.x + this.dx * deltaTime;
