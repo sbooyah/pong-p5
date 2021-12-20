@@ -5,6 +5,22 @@ let player2 = {}
 let player1Score;
 let player2Score;
 let servingPlayer;
+let blipSound;
+let blipSound2;
+let wallBounceSound;
+let scoreSound;
+let victorySound;
+let pongSong;
+
+function preload() {
+  soundFormats('wav');
+  blipSound = loadSound('sounds/Blip-pong.wav');
+  blipSound2 = loadSound('sounds/Blip-pong-low.wav');
+  wallBounceSound = loadSound('sounds/Bounce-pong.wav');
+  scoreSound = loadSound('sounds/Score-pong.wav');
+  victorySound = loadSound('sounds/Cool.wav');
+  pongSong = loadSound('sounds/pong-song.wav')
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -13,6 +29,7 @@ function setup() {
   player1 = new Paddle(10, windowHeight / 2, 15, 150);
   player2 = new Paddle(windowWidth - 25, windowHeight / 2, 15, 150);
   frameRate(144);
+  pongSong.play();
 }
 
 function draw() {
@@ -23,6 +40,7 @@ function draw() {
 
   if (gameState == "serve") {
     if (player1Score >= 10 || player2Score >= 10) {
+      victorySound.play();
       gameState = "victory";
     }
     background(40);
@@ -87,6 +105,8 @@ function draw() {
     if (basa.collides(player1)) {
       basa.dx = -basa.dx * 1.03;
       basa.x = player1.x + player1.width + basa.width / 2 + 1;
+      blipSound.play();
+
 
       if (basa.dy < 0) {
         basa.dy = -Math.random();
@@ -98,6 +118,7 @@ function draw() {
     if (basa.collides(player2)) {
       basa.dx = -basa.dx * 1.03;
       basa.x = player2.x - basa.width / 2;
+      blipSound2.play();
 
       if (basa.dy < 0) {
         basa.dy = -Math.random();
@@ -109,6 +130,7 @@ function draw() {
     // CHECK IF BALL IS PAST PADDLES
     // PLAYER 1 SCORE
     if (basa.x - basa.width / 2 > windowWidth) {
+      scoreSound.play();
       player1Score++;
       servingPlayer = 2;
       basa.reset();
@@ -116,6 +138,7 @@ function draw() {
     }
     // PLAYER 2 SCORE
     if (basa.x + basa.width / 2 < 0) {
+      scoreSound.play();
       player2Score++;
       servingPlayer = 1;
       basa.reset();
@@ -126,10 +149,12 @@ function draw() {
     if (basa.y + basa.height / 2 > windowHeight) {
       basa.y = windowHeight - basa.height / 2;
       basa.dy = -basa.dy
+      wallBounceSound.play();
     }
     if (basa.y - basa.height / 2 < 0) {
       basa.y = 0 + basa.height / 2;
       basa.dy = -basa.dy
+      wallBounceSound.play();
     }
 
     // UPDATE PADDLES WITH KEY INPUT
